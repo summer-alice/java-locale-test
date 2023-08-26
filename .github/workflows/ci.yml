@@ -1,0 +1,24 @@
+name: Java CI
+on: [push]
+env:
+  LANG: "pt_BR.UTF-8"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Locale
+        run: |
+              sudo locale-gen pt_BR.UTF-8
+              sudo update-locale LANG=pt_BR.UTF-8
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots package
+      - name: Run pr_BR.UTF-8
+        run: java -cp target/program-1.0-SNAPSHOT.jar org.example.program.Program
+      - name: Run empty LANG
+        run: LANG="" LC_ALL="" java -cp target/program-1.0-SNAPSHOT.jar org.example.program.Program
